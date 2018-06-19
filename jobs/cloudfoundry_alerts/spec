@@ -4,7 +4,6 @@ name: cloudfoundry_alerts
 packages: []
 
 templates:
-  cf_apps.alerts.yml: cf_apps.alerts.yml
   cf_cells.alerts.yml: cf_cells.alerts.yml
   cf_diego.alerts.yml: cf_diego.alerts.yml
   cf_doppler.alerts.yml: cf_doppler.alerts.yml
