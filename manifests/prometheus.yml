@@ -39,6 +39,7 @@ instance_groups:
         release: prometheus
         properties:
           prometheus:
+            scrape_timeout: "60s"
             rule_files:
               - /var/vcap/jobs/postgres_alerts/*.alerts.yml
               - /var/vcap/jobs/prometheus_alerts/*.alerts.yml
