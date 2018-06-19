@@ -1,0 +1,13 @@
+
+# Grafana Generic OAuth
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/smtp?/enabled?
+  value: true
+  
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/smtp?/from_address?
+  value: ((smtp_from_address))
+ 
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/smtp?/host?
+  value: ((smtp_host))

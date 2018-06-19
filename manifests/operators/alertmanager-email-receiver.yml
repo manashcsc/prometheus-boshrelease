@@ -1,0 +1,7 @@
+- type: replace
+  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers/name=default/email_configs?/-
+  value:
+    to: ((smtp_to_address))
+    from: ((smtp_from_address))
+    smarthost: ((smtp_host))
+    require_tls: false

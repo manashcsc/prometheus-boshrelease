@@ -1,0 +1,123 @@
+---
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+       name: custom-pcf-rules
+       rules:
+        - alert: PMysql-v1-Ephemeral_Disk_Used_Percentage
+          expr: max by (bosh_deployment,bosh_job_name,environment)(avg by (bosh_deployment,bosh_job_ip,bosh_job_name,environment)(firehose_value_metric_p_mysql_p_mysql_system_ephemeral_disk_used_percent{bosh_deployment="p-mysql"})) > 90
+          for: 5m
+          labels:
+            service: p-mysql
+            severity: critical
+          annotations:
+            summary: "MySQL v1 for PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}} ephemeral disk percentage used has exceeded 90%."
+            description: "MySQL v1 for PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}} ephemeral disk percentage used has exceeded 90%. Value is {{$value}} for last 5m"
+            
+        - alert: PMysql-v1-Persistent_Disk_Used_Percentage
+          expr: max by (bosh_deployment,bosh_job_name,environment)(avg by (bosh_deployment,bosh_job_ip,bosh_job_name,environment)(firehose_value_metric_p_mysql_p_mysql_system_persistent_disk_used_percent{bosh_deployment="p-mysql"})) > 90
+          for: 5m
+          labels:
+            service: p-mysql
+            severity: critical
+          annotations:
+            summary: "MySQL v1 for PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}} persistent disk percentage used has exceeded 90%."
+            description: "MySQL v1 for PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}} persistent disk percentage used has exceeded 90%. Value is {{$value}} for last 5m"
+            
+        - alert: PMysql-v1-WSREP_READY
+          expr: min by (environment,bosh_deployment,bosh_job_ip,bosh_job_name)(firehose_value_metric_p_mysql_p_mysql_galera_wsrep_ready{bosh_deployment="p-mysql"}) != 1
+          for: 5m
+          labels:
+            service: p-mysql
+            severity: critical
+          annotations:
+            summary: "MySQL v1 for PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not availble to accept queries"
+            description: "MySQL v1 instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not available to accept queries for last 5 mins. Value is {{$value}}"
+            
+        - alert: PMysql-v1-WSREP_CLUSTER_SIZE
+          expr: min by (environment,bosh_deployment,bosh_job_ip,bosh_job_name)(firehose_value_metric_p_mysql_p_mysql_galera_wsrep_cluster_size{bosh_deployment="p-mysql"}) < 3
+          for: 5m
+          labels:
+            service: p-mysql
+            severity: critical
+          annotations:
+            summary: "MySQL v1 for PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not availble to accept queries"
+            description: "MySQL v1 instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not available to accept queries for last 5 mins. Value is {{$value}}"
+          
+        - alert: PMysql-v1-WSREP_CLUSTER_STATUS
+          expr: min by (environment,bosh_deployment,bosh_job_ip,bosh_job_name)(firehose_value_metric_p_mysql_p_mysql_galera_wsrep_cluster_status{bosh_deployment="p-mysql"}) != 1
+          for: 5m
+          labels:
+            service: p-mysql
+            severity: critical
+          annotations:
+            summary: "MySQL v1 for PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not operational"
+            description: "MySQL v1 instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not operational for last 5 mins. Value is {{$value}}"
+            
+        - alert: PMysql-v1-DISK_PLANS_ALLOCATED
+          expr: (avg by (bosh_deployment,environment)(firehose_value_metric_p_mysql_p_mysql_broker_disk_allocated_service_plans{bosh_deployment="p-mysql"}) / avg by (bosh_deployment,environment)((firehose_value_metric_p_mysql_p_mysql_system_persistent_disk_free{bosh_deployment="p-mysql"}+firehose_value_metric_p_mysql_p_mysql_system_persistent_disk_free{bosh_deployment="p-mysql"})/1024) * 100) > 90
+          for: 5m
+          labels:
+            service: p-mysql
+            severity: critical
+          annotations:
+            summary: "MySQL v1 for PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}` will not allow new service instances to be created"
+            description: "MySQL v1 instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}` will not allow new service instances to be created. Service plan allocated usage is {{$value}} %"
+            
+        - alert: PMysql-v1-Threads_Connected
+          expr: (avg by (bosh_deployment,environment,bosh_job_ip)(firehose_value_metric_p_mysql_p_mysql_performance_threads_connected{bosh_deployment="p-mysql"})/avg by (environment,bosh_deployment,bosh_job_ip) (firehose_value_metric_p_mysql_p_mysql_variables_max_connections{bosh_deployment="p-mysql"})*100) > 90
+          for: 5m
+          labels:
+            service: p-mysql
+            severity: critical
+          annotations:
+            summary: "MySQL v1 for PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` will not allow additional threads to be connected"
+            description: "MySQL v1 instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}` will not allow additional threads to be connected. The current number of threads connected is {{$value}} %"
+         
+        - alert: PMysql-v1-Questions
+          expr: delta(firehose_value_metric_p_mysql_p_mysql_performance_questions{bosh_deployment="p-mysql"}[120s]) == 0
+          for: 5m
+          labels:
+            service: p-mysql
+            severity: critical
+          annotations:
+            summary: "MySQL v1 for PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` is not executing any statements"
+            description: "MySQL v1 instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}` is not executing any statements for past 5m"     
+            
+        - alert: PCF_VMs_System_CPU_User
+          expr: firehose_value_metric_bosh_system_metrics_forwarder_system_cpu_user > 80
+          for: 5m
+          labels:
+            service: cf
+            severity: critical
+          annotations:
+            summary: "PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}` has a high CPU utlization"
+            description: "MySQL v1 instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}` has CPU utlization of {{$value}} for past 5m" 
+        
+        - alert: NFS_Server_system_disk_persistent_percentage
+          expr: firehose_value_metric_bosh_system_metrics_forwarder_system_disk_persistent_percent{bosh_job_name="nfs_server"} > 80
+          for: 5m
+          labels:
+            service: cf
+            severity: warning
+          annotations:
+            summary: "PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}` has a high persistent disk usage"
+            description: "MySQL v1 instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}` has a persistent disk usage of {{$value}} %"     
+            
+            
+        - alert: Firehose_Loss_Rate
+          expr: avg by (bosh_deployment,environment,bosh_job_ip)(firehose_counter_event_loggregator_doppler_dropped_delta / firehose_counter_event_loggregator_doppler_ingress_delta{bosh_job_name="doppler"}) > 0.005
+          for: 5m
+          labels:
+            service: cf
+            severity: warning
+          annotations:
+            summary: "PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has a high message loss rate"
+            description: "MySQL v1 instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has a message loss rate of  {{$value}} "     
+            
+            
+            
+        
+       
+
+       
