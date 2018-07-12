@@ -145,8 +145,27 @@
             summary: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has a Used Memory percentage > 85%"
             description: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has a Used Memory percentage of {{$value}} "     
             
+        - alert: Pivotal-Cloud-Cache-Member-Host-CPU-Usage-Percentage
+          expr: avg by (environment,bosh_deployment,bosh_job_ip)(avg_over_time({__name__=~".*member_host_cpu_usage.*"}[10m])) > 85
+          for: 5m
+          labels:
+            service: p-cloudcache
+            severity: warning
+          annotations:
+            summary: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has a Host CPU Usage percentage > 85%"
+            description: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has a Host CPU Usage percentage of {{$value}} "     
             
-        
+               
+        - alert: Pivotal-Cloud-Cache-Member-File-Descriptors-Remaining
+          expr: avg by (environment,bosh_deployment,bosh_job_ip)(({__name__=~".*member_file_descriptor_remaining.*"})) < 100
+          for: 5m
+          labels:
+            service: p-cloudcache
+            severity: critical
+          annotations:
+            summary: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has remaining file descriptors < 100"
+            description: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has {{$value}} number of remaining file descriptors "     
+            
        
 
        
