@@ -157,7 +157,7 @@
             
                
         - alert: Pivotal-Cloud-Cache-Member-File-Descriptors-Remaining
-          expr: avg by (environment,bosh_deployment,bosh_job_ip)(({__name__=~".*member_file_descriptor_remaining.*"})) < 100
+          expr: avg by (environment,bosh_deployment,bosh_job_ip)({__name__=~".*member_file_descriptor_remaining.*"}) < 100
           for: 5m
           labels:
             service: p-cloudcache
