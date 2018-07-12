@@ -115,6 +115,35 @@
             summary: "PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has a high message loss rate"
             description: "MySQL v1 instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has a message loss rate of  {{$value}} "     
             
+        - alert: Pivotal-Cloud-Cache-Unused-Heap-Percentage-warning
+          expr: avg by (environment,bosh_deployment,bosh_job_ip)  ({__name__=~".*serviceinstance_unused_heap_size_percentage.*"}) < 40
+          for: 5m
+          labels:
+            service: p-cloudcache
+            severity: warning
+          annotations:
+            summary: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has a UnUsed heap size percentage < 40%"
+            description: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has a UnUsed heap size percentage of {{$value}} "     
+         
+        - alert: Pivotal-Cloud-Cache-Unused-Heap-Percentage-critical
+          expr: avg by (environment,bosh_deployment,bosh_job_ip)  ({__name__=~".*serviceinstance_unused_heap_size_percentage.*"}) < 10
+          for: 5m
+          labels:
+            service: p-cloudcache
+            severity: critical
+          annotations:
+            summary: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has a UnUsed heap size percentage < 10%"
+            description: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has a UnUsed heap size percentage of {{$value}} "     
+            
+        - alert: Pivotal-Cloud-Cache-Member-used-Heap-Percentage
+          expr: avg by (environment,bosh_deployment,bosh_job_ip) ({__name__=~".*member_used_memory_percentage"}) > 85
+          for: 10m
+          labels:
+            service: p-cloudcache
+            severity: critical
+          annotations:
+            summary: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has a Used Memory percentage > 85%"
+            description: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has a Used Memory percentage of {{$value}} "     
             
             
         
