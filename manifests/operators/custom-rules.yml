@@ -195,7 +195,7 @@
             summary: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` medium plan: quota remaining < 3"
             
             
-       - alert: Pivotal-Cloud-Cache-Member-Large-plan-Quota-Remaining
+        - alert: Pivotal-Cloud-Cache-Member-Large-plan-Quota-Remaining
           expr: firehose_value_metric_p_cloudcache_on_demand_broker_p_cloudcache_large_plan_quota_remaining < 3
           for: 5m
           labels:
