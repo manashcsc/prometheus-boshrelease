@@ -167,5 +167,41 @@
             description: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` has {{$value}} number of remaining file descriptors "     
             
        
-
-       
+        - alert: Pivotal-Cloud-Cache-Member-Dev-plan-Quota-Remaining
+          expr: firehose_value_metric_p_cloudcache_on_demand_broker_p_cloudcache_dev_plan_quota_remaining < 3
+          for: 5m
+          labels:
+            service: p-cloudcache
+            severity: critical
+          annotations:
+            summary: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` dev plan: quota remaining < 3"
+            
+        - alert: Pivotal-Cloud-Cache-Member-Small-plan-Quota-Remaining
+          expr: firehose_value_metric_p_cloudcache_on_demand_broker_p_cloudcache_small_plan_quota_remaining < 3
+          for: 5m
+          labels:
+            service: p-cloudcache
+            severity: critical
+          annotations:
+            summary: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` small plan: quota remaining < 3"
+          
+        - alert: Pivotal-Cloud-Cache-Member-Medium-plan-Quota-Remaining
+          expr: firehose_value_metric_p_cloudcache_on_demand_broker_p_cloudcache_medium_plan_quota_remaining < 3
+          for: 5m
+          labels:
+            service: p-cloudcache
+            severity: critical
+          annotations:
+            summary: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` medium plan: quota remaining < 3"
+            
+            
+       - alert: Pivotal-Cloud-Cache-Member-Large-plan-Quota-Remaining
+          expr: firehose_value_metric_p_cloudcache_on_demand_broker_p_cloudcache_large_plan_quota_remaining < 3
+          for: 5m
+          labels:
+            service: p-cloudcache
+            severity: critical
+          annotations:
+            summary: "PCC instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` large plan: quota remaining < 3"
+            
+            
