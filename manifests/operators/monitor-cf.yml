@@ -2,21 +2,21 @@
 # This file assumes bosh_exporter based Service Discovery is being used: ./monitor-bosh.yml
 
 # Exporter jobs
-- type: replace
-  path: /instance_groups/name=prometheus2/jobs/-
-  value:
-    name: cf_exporter
-    release: prometheus
-    properties:
-      cf_exporter:
-        cf:
-          api_url: https://api.((system_domain))
-          client_id: cf_exporter
-          client_secret: "((uaa_clients_cf_exporter_secret))"
-          deployment_name: ((metron_deployment_name))
-        metrics:
-          environment: "((metrics_environment))"
-        skip_ssl_verify: ((skip_ssl_verify))
+#- type: replace
+#  path: /instance_groups/name=prometheus2/jobs/-
+#  value:
+#    name: cf_exporter
+#    release: prometheus
+#    properties:
+#      cf_exporter:
+#        cf:
+#          api_url: https://api.((system_domain))
+#          client_id: cf_exporter
+#          client_secret: "((uaa_clients_cf_exporter_secret))"
+#          deployment_name: ((metron_deployment_name))
+#        metrics:
+#          environment: "((metrics_environment))"
+#        skip_ssl_verify: ((skip_ssl_verify))
 
 - type: replace
   path: /instance_groups/-
