@@ -30,7 +30,7 @@ instance_groups:
       - z1
     instances: 1
     vm_type: default
-    persistent_disk: 10_240
+    persistent_disk: 30_720
     stemcell: default
     networks:
       - name: default
