@@ -212,14 +212,3 @@
             severity: critical
           annotations:
             summary: "PCF Log Transport Rate for `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_ip}}` is > 0.01"
-            
-        - alert: Doppler Message Rate Capacity
-          expr: (sum by (bosh_deployment,environment) (rate(firehose_counter_event_loggregator_doppler_ingress_total[5m])) / count by (bosh_deployment,environment)((delta(firehose_counter_event_loggregator_doppler_ingress_total[5m])))) > 16000
-          for: 5m
-          labels:
-            service: cf
-            severity: critical
-          annotations:
-            summary: "Doppler Message Rate Capacity `{{$labels.environment}}/{{$labels.bosh_deployment}}` is > 16000"
-             
-  
