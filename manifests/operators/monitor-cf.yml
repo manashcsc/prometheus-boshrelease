@@ -1,7 +1,7 @@
 # Apply ./cf/add-prometheus-uaa-clients.yml to your cf-deployment based Cloud Foundry
 # This file assumes bosh_exporter based Service Discovery is being used: ./monitor-bosh.yml
 
- Exporter jobs
+# Exporter jobs
 - type: replace
   path: /instance_groups/name=prometheus2/jobs/-
   value:
