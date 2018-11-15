@@ -40,8 +40,8 @@ instance_groups:
         properties:
           prometheus:
             scrape_timeout: "60s"
-            scrape_interval: "60s"
-            evaluation_interval: "60s"
+            scrape_interval: "300s"
+            evaluation_interval: "300s"
             rule_files:
               - /var/vcap/jobs/postgres_alerts/*.alerts.yml
               - /var/vcap/jobs/prometheus_alerts/*.alerts.yml
