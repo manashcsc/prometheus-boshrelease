@@ -254,7 +254,7 @@
           annotations: 
               description: "PAS MySQL instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}`connection usage for last 5 mins. Value is {{$value}}"
               summary: "PAS MySQL PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` connection usage"
-          expr: "max by (environment,bosh_deployment,bosh_job_ip,bosh_job_name,)(firehose_value_metric_mysql_mysql_net_max_used_connections{bosh_deployment="cf"}) / max by (environment,bosh_deployment,bosh_job_ip,bosh_job_name) (firehose_value_metric_mysql_mysql_variables_max_connections{bosh_deployment="cf"}) * 100 > 90"
+          expr: "max by (environment,bosh_deployment,bosh_job_ip,bosh_job_name)(firehose_value_metric_mysql_mysql_net_max_used_connections{bosh_deployment=\"cf\"}) / max by (environment,bosh_deployment,bosh_job_ip,bosh_job_name) (firehose_value_metric_mysql_mysql_variables_max_connections{bosh_deployment=\"cf\"}) * 100 > 90"
           for: 5m
           labels: 
               service: "cf"
