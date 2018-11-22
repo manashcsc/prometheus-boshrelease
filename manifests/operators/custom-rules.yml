@@ -4,6 +4,26 @@
   value:
        name: custom-pcf-rules
        rules:
+        - alert: CFAppCrashed-Spring-Cloud-Services
+          expr: sum(cf_application_instances_running{state=~"STARTED",organization_name=”p-spring-cloud-services”}) by(environment, deployment, organization_name, space_name, application_name) == 0
+          for: 8h
+          labels:
+            service: cf
+            severity: critical
+          annotations:
+            summary: "CF Application `{{$labels.environment}}/{{$labels.deployment}}/{{$labels.organization_name}}/{{$labels.space_name}}/{{$labels.application_name}}` does not have any instance running"
+            description: "CF Application `{{$labels.application_name}}` at environment `{{$labels.environment}}`, deployment `{{$labels.deployment}}`, org `{{$labels.organization_name}}`, and space `{{$labels.space_name}}` has not had any instance running during the last 8h"
+
+        - alert: CFAppUnhealthy-Spring-Cloud-Services
+          expr: min(cf_application_instances{state=~"STARTED", organization_name=”p-spring-cloud-services”} - cf_application_instances_running{state=~"STARTED", organization_name=”p-spring-cloud-services”}) by(environment, deployment, organization_name, space_name, application_name) > 0
+          for: 30m
+          labels:
+            service: cf
+            severity: warning
+          annotations:
+            summary: "CF Application `{{$labels.environment}}/{{$labels.deployment}}/{{$labels.organization_name}}/{{$labels.space_name}}/{{$labels.application_name}}` is unhealthy"
+            description: "CF Application `{{$labels.application_name}}` at environment `{{$labels.environment}}`, deployment `{{$labels.deployment}}`, org `{{$labels.organization_name}}`, and space `{{$labels.space_name}}` had less instances running than desired during the last 30m"
+
         - alert: PMysql-v1-Ephemeral_Disk_Used_Percentage
           expr: max by (bosh_deployment,bosh_job_name,environment)(avg by (bosh_deployment,bosh_job_ip,bosh_job_name,environment)(firehose_value_metric_p_mysql_p_mysql_system_ephemeral_disk_used_percent{bosh_deployment="p-mysql"})) > 90
           for: 5m
