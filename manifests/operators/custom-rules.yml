@@ -222,5 +222,41 @@
           annotations:
             summary: "Doppler Message Rate Capacity `{{$labels.environment}}/{{$labels.bosh_deployment}}` is > 16000"
          
- 
+        - alert: "PAS-Mysql-WSREP_READY"
+          annotations: 
+              description: "PAS MySQL instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not available to accept queries for last 5 mins. Value is {{$value}}"
+              summary: "PAS PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not availble to accept queries"
+          expr: "min by (environment,bosh_deployment,bosh_job_ip,bosh_job_name)(firehose_value_metric_mysql_mysql_galera_wsrep_ready{bosh_deployment=\"cf\"}) != 1"
+          for: 2m
+          labels: 
+             service: "cf"
+             severity: critical
+        - alert: "PAS-Mysql-WSREP_CLUSTER_SIZE"
+          annotations: 
+              description: "PAS MySQL instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not available to accept queries for last 5 mins. Value is {{$value}}"
+              summary: "PAS PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not availble to accept queries"
+          expr: "min by (environment,bosh_deployment,bosh_job_ip,bosh_job_name)(firehose_value_metric_mysql_mysql_galera_wsrep_cluster_size{bosh_deployment=\"cf\"}) < 3"
+          for: 2m
+          labels: 
+              service: "cf"
+              severity: critical
+        - alert: "PAS-Mysql-WSREP_CLUSTER_STATUS"
+          annotations: 
+              description: "PAS MySQL instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not operational for last 5 mins. Value is {{$value}}"
+              summary: "PAS MySQL PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not operational"
+          expr: "min by (environment,bosh_deployment,bosh_job_ip,bosh_job_name)(firehose_value_metric_mysql_mysql_galera_wsrep_cluster_status{bosh_deployment=\"cf\"}) != 1"
+          for: 2m
+          labels: 
+              service: "cf"
+              severity: critical
+        
+        - alert: "PAS-Mysql-Connection-Usage"
+          annotations: 
+              description: "PAS MySQL instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}`connection usage for last 5 mins. Value is {{$value}}"
+              summary: "PAS MySQL PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` connection usage"
+          expr: "max by (environment,bosh_deployment,bosh_job_ip,bosh_job_name)(firehose_value_metric_mysql_mysql_net_max_used_connections{bosh_deployment=\"cf\"}) / max by (environment,bosh_deployment,bosh_job_ip,bosh_job_name) (firehose_value_metric_mysql_mysql_variables_max_connections{bosh_deployment=\"cf\"}) * 100 > 90"
+          for: 5m
+          labels: 
+              service: "cf"
+              severity: critical
              
