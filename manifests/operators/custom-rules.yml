@@ -227,7 +227,7 @@
               description: "PAS MySQL instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not available to accept queries for last 5 mins. Value is {{$value}}"
               summary: "PAS PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not availble to accept queries"
           expr: "min by (environment,bosh_deployment,bosh_job_ip,bosh_job_name)(firehose_value_metric_mysql_mysql_galera_wsrep_ready{bosh_deployment=\"cf\"}) != 1"
-          for: 5m
+          for: 2m
           labels: 
              service: "cf"
              severity: critical
@@ -236,7 +236,7 @@
               description: "PAS MySQL instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not available to accept queries for last 5 mins. Value is {{$value}}"
               summary: "PAS PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not availble to accept queries"
           expr: "min by (environment,bosh_deployment,bosh_job_ip,bosh_job_name)(firehose_value_metric_mysql_mysql_galera_wsrep_cluster_size{bosh_deployment=\"cf\"}) < 3"
-          for: 5m
+          for: 2m
           labels: 
               service: "cf"
               severity: critical
@@ -245,7 +245,7 @@
               description: "PAS MySQL instance at `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not operational for last 5 mins. Value is {{$value}}"
               summary: "PAS MySQL PCF instance `{{$labels.environment}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_ip}}` server not operational"
           expr: "min by (environment,bosh_deployment,bosh_job_ip,bosh_job_name)(firehose_value_metric_mysql_mysql_galera_wsrep_cluster_status{bosh_deployment=\"cf\"}) != 1"
-          for: 5m
+          for: 2m
           labels: 
               service: "cf"
               severity: critical
